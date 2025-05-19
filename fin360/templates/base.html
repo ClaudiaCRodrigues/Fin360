@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fin360{% endblock %}</title>
-    <link href="{% static 'soft-ui-dashboard/css/soft-ui-dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'black-dashboard/css/black-dashboard.css' %}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="g-sidenav-show bg-gray-100">
@@ -16,7 +17,7 @@
             {% include 'includes/footer.html' %}
         </div>
     </main>
-    <script src="{% static 'soft-ui-dashboard/js/soft-ui-dashboard.js' %}"></script>
+    <script src="{% static 'black-dashboard/js/black-dashboard.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
