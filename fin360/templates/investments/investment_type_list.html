@@ -8,7 +8,8 @@
       <thead>
         <tr>
           <th>Nome</th>
-          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Descrição</th>          
           <th>Ações</th>
         </tr>
       </thead>
@@ -16,6 +17,7 @@
         {% for tipo in types %}
         <tr>
           <td>{{ tipo.nome }}</td>
+          <td>{{ tipo.category }}</td>
           <td>{{ tipo.descricao|default:"-" }}</td>
           <td>
             <a href="{% url 'investment_type_update' tipo.pk %}" class="btn btn-sm btn-warning">Editar</a>

@@ -35,7 +35,12 @@
                 <p>Tipo de investimento</p>
               </a>
             </li>
-            {# aqui você pode incluir outros sub-itens de Administração #}
+            <li class="{% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+              <a href="{% url 'category_list' %}">
+                <i class="tim-icons icon-attach-87"></i>
+                <p>Categorias de investimento</p>
+              </a>
+            </li>
           </ul>
         </div>
       </li>

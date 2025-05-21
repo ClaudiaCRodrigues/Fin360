@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h2>{% if form.instance.pk %}Editar Categoria{% else %}Novo Categoria{% endif %}</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+      </div>
+      <div class="form-group">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+      </div>
+      <button type="submit" class="btn btn-success">Salvar</button>
+      <a href="{% url 'category_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
