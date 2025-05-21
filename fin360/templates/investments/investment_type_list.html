@@ -18,10 +18,10 @@
         <tr>
           <td>{{ tipo.nome }}</td>
           <td>{{ tipo.category }}</td>
-          <td>{{ tipo.descricao|default:"-" }}</td>
+          <td>{{ tipo.descricao|default:"-"|truncatechars:50 }}</td>
           <td>
-            <a href="{% url 'investment_type_update' tipo.pk %}" class="btn btn-sm btn-warning">Editar</a>
-            <a href="{% url 'investment_type_delete' tipo.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+            <a href="{% url 'investment_type_update' tipo.pk %}">Editar</a> |
+            <a href="{% url 'investment_type_delete' tipo.pk %}">Excluir</a>
           </td>
         </tr>
         {% empty %}

@@ -1,7 +1,40 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
-from .models import InvestmentType,Category
+from .models import InvestmentType,Category,FinancialInstitution
 
+class InstitutionListView(ListView):
+    model = FinancialInstitution
+    context_object_name = 'institutions'
+    template_name = 'investments/institution_list.html'
+
+class InstitutionDetailView(DetailView):
+    model = FinancialInstitution
+    context_object_name = 'institution'
+    template_name = 'investments/institution_detail.html'
+    slug_field = 'slug'
+
+class InstitutionCreateView(CreateView):
+    model = FinancialInstitution
+    fields = [
+        'name', 'slug', 'institution_type', 'code', 'cnpj',
+        'website', 'email', 'phone_number', 'address'
+    ]
+    template_name = 'investments/institution_form.html'
+    success_url = reverse_lazy('institution_list')
+
+class InstitutionUpdateView(UpdateView):
+    model = FinancialInstitution
+    fields = [
+        'name', 'slug', 'institution_type', 'code', 'cnpj',
+        'website', 'email', 'phone_number', 'address'
+    ]
+    template_name = 'investments/institution_form.html'
+    success_url = reverse_lazy('institution_list')
+
+class InstitutionDeleteView(DeleteView):
+    model = FinancialInstitution
+    template_name = 'investments/institution_confirm_delete.html'
+    success_url = reverse_lazy('institution_list')
 class CategoryListView(ListView):
     model = Category
     context_object_name = 'categories'

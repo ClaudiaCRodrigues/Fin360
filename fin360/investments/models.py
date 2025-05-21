@@ -1,6 +1,44 @@
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 
+class FinancialInstitution(models.Model):
+    BANK = 'bank'
+    BROKERAGE = 'brokerage'
+    OTHER = 'other'
+    INSTITUTION_TYPES = [
+        (BANK, 'Banco'),
+        (BROKERAGE, 'Corretora'),
+        (OTHER, 'Outro'),
+    ]
+
+    name = models.CharField('Nome', max_length=200, unique=True)
+    slug = models.SlugField('Slug', max_length=200, unique=True)
+    institution_type = models.CharField(
+        'Tipo de Instituição',
+        max_length=20,
+        choices=INSTITUTION_TYPES,
+        default=BANK
+    )
+    code = models.CharField('Código interno', max_length=50, blank=True, null=True, help_text='Ex: código usado no sistema externo')
+    cnpj = models.CharField('CNPJ', max_length=18, unique=True)
+    website = models.URLField('Site', blank=True)
+    email = models.EmailField('E-mail de contato', blank=True)
+    phone_number = models.CharField('Telefone', max_length=30, blank=True)
+    address = models.TextField('Endereço completo', blank=True)
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Instituição Financeira'
+        verbose_name_plural = 'Instituições Financeiras'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('institution_detail', kwargs={'slug': self.slug})
 class Category(models.Model):
     name        = models.CharField("Nome",      max_length=100, unique=True)
     slug        = models.SlugField("Slug",      max_length=100, unique=True, blank=True)

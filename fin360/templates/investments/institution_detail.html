@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ institution.name }}</h1>
+<p><strong>Tipo:</strong> {{ institution.get_institution_type_display }}</p>
+<p><strong>Código:</strong> {{ institution.code }}</p>
+<p><strong>CNPJ:</strong> {{ institution.cnpj }}</p>
+<p><strong>Site:</strong> <a href="{{ institution.website }}">{{ institution.website }}</a></p>
+<p><strong>E-mail:</strong> {{ institution.email }}</p>
+<p><strong>Telefone:</strong> {{ institution.phone_number }}</p>
+<p><strong>Endereço:</strong><br>{{ institution.address|linebreaks }}</p>
+<a href="{% url 'institution_update' institution.slug %}" class="btn btn-secondary">Editar</a>
+<a href="{% url 'institution_list' %}" class="btn btn-link">Voltar à lista</a>
+{% endblock %}

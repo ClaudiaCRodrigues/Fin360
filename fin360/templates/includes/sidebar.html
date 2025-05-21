@@ -41,6 +41,12 @@
                 <p>Categorias de investimento</p>
               </a>
             </li>
+            <li class="{% if request.resolver_match.url_name == 'institution_list' %}active{% endif %}">
+              <a href="{% url 'institution_list' %}">
+                <i class="tim-icons icon-attach-87"></i>
+                <p>Instituíções Financeiras</p>
+              </a>
+            </li>
           </ul>
         </div>
       </li>

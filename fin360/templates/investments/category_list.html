@@ -16,10 +16,10 @@
         {% for cat in categories %}
         <tr>
           <td>{{ cat.name }}</td>
-          <td>{{ cat.description|default:"-" }}</td>
+          <td>{{ cat.description|default:"-"|truncatechars:50 }}</td>
           <td>
-            <a href="{% url 'category_update' cat.pk %}" class="btn btn-sm btn-warning">Editar</a>
-            <a href="{% url 'category_delete' cat.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+              <a href="{% url 'category_update' cat.pk %}">Editar</a> |
+            <a href="{% url 'category_delete' cat.pk %}">Excluir</a>
           </td>
         </tr>
         {% empty %}
