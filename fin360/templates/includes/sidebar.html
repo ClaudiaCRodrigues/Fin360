@@ -1,9 +1,21 @@
-{% load i18n static %}
-<ul class="nav">
-  <li class="{% if 'dashboard' in segment %}active{% endif %}">
-    <a href="{% url 'home' %}">
-      <i class="tim-icons icon-chart-pie-36"></i>
-      <p>Dashboard</p>
+{% load static %}
+<nav class="sidebar" data-color="black" data-active-color="danger">
+  <div class="logo">
+    <a href="{% url 'home' %}" class="simple-text logo-mini">
+      <img src="{% static 'black-dashboard/assets/img/logo-small.png' %}" alt="Logo"/>
     </a>
-  </li>
-</ul>
+    <a href="{% url 'home' %}" class="simple-text logo-normal">
+      Fin360
+    </a>
+  </div>
+  <div class="sidebar-wrapper">
+    <ul class="nav">
+      <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+        <a href="{% url 'home' %}">
+          <i class="tim-icons icon-chart-pie-36"></i>
+          <p>Dashboard</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

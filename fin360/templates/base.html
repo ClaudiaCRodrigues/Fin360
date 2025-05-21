@@ -5,19 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fin360{% endblock %}</title>
-    <link href="{% static 'black-dashboard/css/black-dashboard.css' %}" rel="stylesheet">
+    
+    <!-- Correção dos caminhos CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="{% static 'black-dashboard/assets/css/nucleo-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'black-dashboard/assets/css/black-dashboard.css' %}" rel="stylesheet">
+    <link href="{% static 'black-dashboard/assets/css/theme-switcher.css' %}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="g-sidenav-show bg-gray-100">
-    {% include 'includes/sidebar.html' %}
-    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-        {% include 'includes/navbar.html' %}
-        <div class="container-fluid py-4">
-            {% block content %}{% endblock %}
+<body>
+    <div class="wrapper">
+        {% include 'includes/sidebar.html' %}
+        <div class="main-panel">
+            {% include 'includes/navbar.html' %}
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
             {% include 'includes/footer.html' %}
         </div>
-    </main>
-    <script src="{% static 'black-dashboard/js/black-dashboard.js' %}"></script>
+    </div>
+
+    <!-- Correção dos caminhos JavaScript -->
+    <script src="{% static 'black-dashboard/assets/js/core/jquery.min.js' %}"></script>
+    <script src="{% static 'black-dashboard/assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'black-dashboard/assets/js/core/bootstrap.min.js' %}"></script>
+    <script src="{% static 'black-dashboard/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'black-dashboard/assets/js/black-dashboard.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
