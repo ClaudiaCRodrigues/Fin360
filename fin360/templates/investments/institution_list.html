@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Instituições Financeiras</h1>
+<a href="{% url 'institution_create' %}" class="btn btn-primary mb-3">Nova Instituição</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Tipo</th>
+      <th>CNPJ</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for inst in institutions %}
+    <tr>
+      <td><a href="{{ inst.get_absolute_url }}">{{ inst.name }}</a></td>
+      <td>{{ inst.get_institution_type_display }}</td>
+      <td>{{ inst.cnpj }}</td>
+      <td>
+        <a href="{% url 'institution_update' inst.slug %}">Editar</a> |
+        <a href="{% url 'institution_delete' inst.slug %}">Excluir</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Nenhuma instituição cadastrada.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
