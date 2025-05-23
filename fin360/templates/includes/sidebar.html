@@ -50,7 +50,13 @@
           </ul>
         </div>
       </li>
-
+       <!-- Portifolio -->
+      <li class="{% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}">
+        <a href="{% url 'portfolio' %}">
+          <i class="tim-icons icon-chart-pie-36"></i>
+          <p>Portifolio</p>
+        </a>
+      </li>
       {# outros itens do menu... #}
 
     </ul>
