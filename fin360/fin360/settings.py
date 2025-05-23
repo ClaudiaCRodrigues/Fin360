@@ -116,3 +116,16 @@ CELERY_BEAT_SCHEDULE = {
 # Authentication redirects
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGIN_URL = '/accounts/login/'
+
+
+SECURE_SSL_REDIRECT   = env('SECURE_SSL_REDIRECT',   default=False)
+SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE', default=False)
+CSRF_COOKIE_SECURE    = env('CSRF_COOKIE_SECURE',    default=False)
+
+SECURE_HSTS_SECONDS            = env.int('SECURE_HSTS_SECONDS',            default=0)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=False)
+SECURE_HSTS_PRELOAD            = env.bool('SECURE_HSTS_PRELOAD',            default=False)
+
+#— Add defaults for these two so they never KeyError
+SECURE_REFERRER_POLICY = env('SECURE_REFERRER_POLICY', default='same-origin')
+X_FRAME_OPTIONS       = env('X_FRAME_OPTIONS',       default='DENY')
