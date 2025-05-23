@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <!-- Cabeçalho com título e valor total -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <h2>Minha Carteira de Investimentos</h2>
+    </div>
+    <div class="col-md-6 text-right">
+      <h4>Valor Total: R$ {{ total_portfolio|floatformat:2 }}</h4>
+    </div>
+  </div>
+
+  <!-- Cards de cada categoria -->
+  {% for category in categories %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-white">
+          <h4 class="card-title">{{ category.name }}</h4>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr class="bg-primary text-white">
+                <th>Ativo</th>
+                <th>Ticker</th>
+                <th>Valor Investido</th>
+                <th>Valor Atual</th>
+                <th>Retorno (%)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for inv in category.investments.all %}
+              <tr>
+                <td>{{ inv.name }}</td>
+                <td>{{ inv.ticker }}</td>
+                <td>R$ {{ inv.initial_value|floatformat:2 }}</td>
+                <td>R$ {{ inv.current_value|floatformat:2 }}</td>
+                <td>{{ inv.return_percent|floatformat:2 }}%</td>
+                <td>
+                  <a href="{% url 'investment_edit' inv.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                  <a href="{% url 'investment_delete' inv.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center text-muted">Nenhum investimento cadastrado.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

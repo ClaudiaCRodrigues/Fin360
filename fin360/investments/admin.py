@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import InvestmentType,Category,FinancialInstitution
+from .models import InvestmentType,Category,FinancialInstitution,Investment
 
 @admin.register(FinancialInstitution)
 class FinancialInstitutionAdmin(admin.ModelAdmin):
@@ -16,3 +16,9 @@ class CategoryAdmin(admin.ModelAdmin):
 class InvestmentTypeAdmin(admin.ModelAdmin):
     list_display = ('nome',)
     search_fields = ('nome',)
+    
+@admin.register(Investment)
+class InvestmentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'ticker', 'category', 'type', 'initial_value', 'current_value')
+    list_filter = ('category', 'type')
+    search_fields = ('name', 'ticker')
