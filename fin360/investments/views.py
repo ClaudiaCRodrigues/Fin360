@@ -3,7 +3,7 @@ from django.views.generic import (
     ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
 )
 from .models import (
-    FinancialInstitution, Category, InvestmentType, Investment
+    FinancialInstitution, Category, InvestmentType, Index
 )
 
 class InstitutionListView(ListView):
@@ -99,3 +99,26 @@ class PortfolioView(TemplateView):
             inv.current_value for cat in categories for inv in cat.investments.all()
         )
         return ctx
+    
+class IndexListView(ListView):
+    model = Index
+    template_name = 'investments/index_list.html'
+    context_object_name = 'indices'
+    paginate_by = 20
+
+class IndexCreateView(CreateView):
+    model = Index
+    fields = ['name', 'value', 'date']
+    template_name = 'investments/index_form.html'
+    success_url = reverse_lazy('index_list')
+
+class IndexUpdateView(UpdateView):
+    model = Index
+    fields = ['name', 'value', 'date']
+    template_name = 'investments/index_form.html'
+    success_url = reverse_lazy('index_list')
+
+class IndexDeleteView(DeleteView):
+    model = Index
+    template_name = 'investments/index_confirm_delete.html'
+    success_url = reverse_lazy('index_list')

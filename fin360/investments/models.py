@@ -99,3 +99,32 @@ class Investment(models.Model):
         if self.initial_value:
             return (self.current_value / self.initial_value - 1) * 100
         return 0
+    
+class Index(models.Model):
+    SELIC = 'selic'
+    IPCA = 'ipca'
+    CDI  = 'cdi'
+    OTHER = 'other'
+
+    INDEX_CHOICES = [
+        (SELIC, 'SELIC'),
+        (IPCA,  'IPCA'),
+        (CDI,   'CDI'),
+        (OTHER, 'Outro'),
+    ]
+
+    name       = models.CharField('Índice', max_length=20, choices=INDEX_CHOICES)
+    value      = models.DecimalField('Valor (%)', max_digits=6, decimal_places=2)
+    date       = models.DateField('Data de Referência')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Índice'
+        verbose_name_plural = 'Índices'
+
+    def __str__(self):
+        return f'{self.get_name_display()} — {self.value}% em {self.date:%d/%m/%Y}'
+
+    def get_absolute_url(self):
+        return reverse('admin_index_list')

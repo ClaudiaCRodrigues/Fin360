@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{% if form.instance.pk %}Editar{% else %}Novo{% endif %} Índice</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">
+    {% if form.instance.pk %}Salvar alterações{% else %}Cadastrar{% endif %}
+  </button>
+  <a href="{% url 'index_list' %}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

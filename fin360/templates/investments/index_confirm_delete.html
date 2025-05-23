@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Confirmar Exclusão</h2>
+<p>Tem certeza que deseja excluir o índice “{{ object }}”?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Sim, excluir</button>
+  <a href="{% url 'admin_index_list' %}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

@@ -10,7 +10,8 @@ from .views import (
     CategoryUpdateView,
     InstitutionListView, InstitutionDetailView,
     InstitutionCreateView, InstitutionUpdateView, InstitutionDeleteView,
-    PortfolioView
+    PortfolioView,
+    IndexCreateView,IndexListView,IndexUpdateView,IndexDeleteView,
 )
 
 urlpatterns = [
@@ -29,5 +30,9 @@ urlpatterns = [
     path('institutions/<slug:slug>/editar/', InstitutionUpdateView.as_view(), name='institution_update'),
     path('institutions/<slug:slug>/excluir/', InstitutionDeleteView.as_view(), name='institution_delete'),
     path('portfolio/', PortfolioView.as_view(), name='portfolio'),
+    path('indices/', IndexListView.as_view(), name='index_list'),
+    path('indices/new/', IndexCreateView.as_view(), name='index_create'),
+    path('indices/<int:pk>/edit/', IndexUpdateView.as_view(), name='index_update'),
+    path('indices/<int:pk>/delete/', IndexDeleteView.as_view(), name='index_delete'),
 
 ]
