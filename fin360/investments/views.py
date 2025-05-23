@@ -1,6 +1,10 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView,DetailView
-from .models import InvestmentType,Category,FinancialInstitution
+from django.views.generic import (
+    ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
+)
+from .models import (
+    FinancialInstitution, Category, InvestmentType, Investment
+)
 
 class InstitutionListView(ListView):
     model = FinancialInstitution
@@ -83,3 +87,15 @@ class InvestmentTypeDeleteView(DeleteView):
     model = InvestmentType
     template_name = "investments/investment_type_confirm_delete.html"
     success_url = reverse_lazy("investment_type_list")
+    
+class PortfolioView(TemplateView):
+    template_name = 'investments/portfolio.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        categories = Category.objects.prefetch_related('investments').all()
+        ctx['categories'] = categories
+        ctx['total_portfolio'] = sum(
+            inv.current_value for cat in categories for inv in cat.investments.all()
+        )
+        return ctx

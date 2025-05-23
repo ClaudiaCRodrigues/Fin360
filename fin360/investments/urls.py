@@ -9,7 +9,8 @@ from .views import (
     CategoryCreateView,
     CategoryUpdateView,
     InstitutionListView, InstitutionDetailView,
-    InstitutionCreateView, InstitutionUpdateView, InstitutionDeleteView
+    InstitutionCreateView, InstitutionUpdateView, InstitutionDeleteView,
+    PortfolioView
 )
 
 urlpatterns = [
@@ -27,5 +28,6 @@ urlpatterns = [
     path('institutions/<slug:slug>/', InstitutionDetailView.as_view(), name='institution_detail'),
     path('institutions/<slug:slug>/editar/', InstitutionUpdateView.as_view(), name='institution_update'),
     path('institutions/<slug:slug>/excluir/', InstitutionDeleteView.as_view(), name='institution_delete'),
+    path('portfolio/', PortfolioView.as_view(), name='portfolio'),
 
 ]
