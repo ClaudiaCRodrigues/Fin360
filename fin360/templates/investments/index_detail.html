@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Detalhes de {{ index_name|upper }}</h2>
+<a href="{% url 'index_summary' %}" class="btn btn-link">&larr; Voltar</a>
+<table class="table table-bordered">
+  <thead>
+    <tr><th>Data</th><th>Valor (%)</th></tr>
+  </thead>
+  <tbody>
+    {% for entry in entries %}
+    <tr>
+      <td>{{ entry.date|date:"d/m/Y" }}</td>
+      <td>{{ entry.value }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="2">Nenhum registro encontrado.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

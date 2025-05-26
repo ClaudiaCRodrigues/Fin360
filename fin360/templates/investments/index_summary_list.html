@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Índices de Investimento</h2>
+<a href="{% url 'sync_indices' %}" class="btn btn-primary mb-3">
+  Sincronizar com Bacen
+</a>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Índice</th>
+      <th>Última Data</th>
+      <th>Último Valor (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for idx in indices %}
+    <tr>
+      <td>
+        <a href="{% url 'index_detail' idx.name %}">
+          {{ idx.name|upper }}
+        </a>
+      </td>
+      <td>{{ idx.last_date|date:"d/m/Y" }}</td>
+      <td>{{ idx.last_value }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">Nenhum índice cadastrado.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
