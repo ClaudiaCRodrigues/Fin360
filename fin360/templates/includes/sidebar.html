@@ -52,8 +52,8 @@
                 <p>Instituições Financeiras</p>
               </a>
             </li>
-            <li class="{% if request.resolver_match.url_name == 'index_list' %}active{% endif %}">
-              <a href="{% url 'index_list' %}">
+            <li class="{% if request.resolver_match.url_name == 'index_summary' %}active{% endif %}">
+              <a href="{% url 'index_summary' %}">
                 <i class="tim-icons icon-chart-bar-32"></i>
                 <p>Índices de investimento</p>
               </a>
