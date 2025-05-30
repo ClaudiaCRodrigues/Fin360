@@ -5,22 +5,43 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db.models import Max
 from .forms import PdfImportForm
-from .models import FinancialInstitution, Category, InvestmentType, Index
+from .models import FinancialInstitution, Category, InvestmentType, Index, InvestmentTransaction
 from .services import sync_indices, processar_importacao
 
 def importar_investimentos(request):
-    if request.method == 'POST':
-        form = PdfImportForm(request.POST, request.FILES)
-        if form.is_valid():
-            arquivos = request.FILES.getlist('arquivos')
-            if len(arquivos) > 15:
-                form.add_error('arquivos', 'Máximo de 15 arquivos.')
-            else:
-                resultados = processar_importacao(arquivos)
-                return render(request, 'imports/resultado.html', {'resultados': resultados})
-    else:
-        form = PdfImportForm()
-    return render(request, 'imports/form_import.html', {'form': form})
+    if request.method == "POST":
+        step = request.POST.get("step", "upload")
+        arquivos = request.FILES.getlist("arquivos")
+
+        # passo 1: upload e detecção
+        if step == "upload":
+            resultados = processar_importacao(arquivos)
+            faltantes = [r for r in resultados if r["broker"] is None]
+            if faltantes:
+                # renderiza seleção de corretora
+                return render(request, "imports/missing_institutions.html", {
+                    "step": "select",
+                    "faltantes": faltantes,
+                    "institutions": FinancialInstitution.objects.all()
+                })
+            # se todos identificados, mostra resultado
+            return render(request, "imports/resultado.html", {"resultados": resultados})
+
+        # passo 2: usuário escolheu manualmente
+        if step == "select":
+            # recupera overrides: map file_name -> inst
+            overrides = {}
+            for idx, file_name in enumerate(request.POST.getlist("file_names")):
+                sel = request.POST.get(f"broker_for_{idx}")
+                if sel:
+                    overrides[file_name] = FinancialInstitution.objects.get(pk=sel)
+
+            # reusa os mesmos arquivos do upload
+            resultados = processar_importacao(arquivos, overrides)
+            return render(request, "imports/resultado.html", {"resultados": resultados})
+
+    # GET ou erro
+    return render(request, "imports/form_import.html", {"error_message": None})
 
 class IndexSummaryListView(TemplateView):
     template_name = 'investments/index_summary_list.html'
@@ -159,9 +180,7 @@ class PortfolioView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        categories = Category.objects.prefetch_related('investments').all()
-        ctx['categories'] = categories
-        ctx['total_portfolio'] = sum(
-            inv.current_value for cat in categories for inv in cat.investments.all()
-        )
+        ctx['transactions'] = InvestmentTransaction.objects.select_related('investment').all()
+        # Se quiser somar o valor total:
+        ctx['total_portfolio'] = sum(tx.quantity * tx.price for tx in ctx['transactions'])
         return ctx

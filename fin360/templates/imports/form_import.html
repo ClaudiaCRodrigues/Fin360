@@ -1,26 +1,59 @@
-{# investments/templates/imports/form_import.html #}
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-5">
   <h1>Importar Investimentos</h1>
-  <form method="post" enctype="multipart/form-data">
+
+  <form
+    id="import-form"
+    method="post"
+    enctype="multipart/form-data"
+    action="{% url 'investment_import' %}"
+  >
     {% csrf_token %}
 
-    <div class="mb-3">
-      {{ form.arquivos.label_tag }}
-      {{ form.arquivos }}
-      {% if form.arquivos.help_text %}
-        <div class="form-text">{{ form.arquivos.help_text }}</div>
-      {% endif %}
-      {% for error in form.arquivos.errors %}
-        <div class="text-danger">{{ error }}</div>
-      {% endfor %}
+    <div class="mb-3 d-flex align-items-center">
+      {# Label estilizado como botão #}
+      <label for="id_arquivos" class="btn btn-primary me-3">
+        <i class="fas fa-file-upload"></i>
+        Selecionar PDFs
+      </label>
+
+      {# Input escondido, mas que mantém os arquivos no form #}
+      <input
+        type="file"
+        id="id_arquivos"
+        name="arquivos"
+        multiple
+        accept="application/pdf"
+        style="display: none;"
+        onchange="updateFileList(this)"
+      >
+
+      {# Onde vamos mostrar os nomes selecionados #}
+      <span id="file-list">Nenhum arquivo selecionado</span>
     </div>
 
-    <button type="submit" class="btn btn-primary">
-      Selecionar PDFs
+    {# Botão de enviar separado #}
+    <button type="submit" class="btn btn-success">
+      Importar PDFs
     </button>
+
+    {# Erros vindos da validação, se houver #}
+    {% if error_message %}
+      <div class="mt-3 text-danger">{{ error_message }}</div>
+    {% endif %}
   </form>
 </div>
+
+<script>
+  function updateFileList(input) {
+    const list = document.getElementById('file-list');
+    if (input.files.length > 0) {
+      const names = Array.from(input.files).map(f => f.name).join(', ');
+      list.textContent = names;
+    } else {
+      list.textContent = 'Nenhum arquivo selecionado';
+    }
+  }
+</script>
 {% endblock %}
