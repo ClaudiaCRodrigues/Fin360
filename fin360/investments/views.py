@@ -2,12 +2,25 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, TemplateView
 from django.views import View
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.db.models import Max
-
+from .forms import PdfImportForm
 from .models import FinancialInstitution, Category, InvestmentType, Index
-from .services import sync_indices
+from .services import sync_indices, processar_importacao
 
+def importar_investimentos(request):
+    if request.method == 'POST':
+        form = PdfImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            arquivos = request.FILES.getlist('arquivos')
+            if len(arquivos) > 15:
+                form.add_error('arquivos', 'Máximo de 15 arquivos.')
+            else:
+                resultados = processar_importacao(arquivos)
+                return render(request, 'imports/resultado.html', {'resultados': resultados})
+    else:
+        form = PdfImportForm()
+    return render(request, 'imports/form_import.html', {'form': form})
 
 class IndexSummaryListView(TemplateView):
     template_name = 'investments/index_summary_list.html'

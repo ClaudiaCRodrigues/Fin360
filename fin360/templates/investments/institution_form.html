@@ -3,7 +3,7 @@
 <h1>{% if form.instance.pk %}Editar{% else %}Nova{% endif %} Instituição</h1>
 <form method="post">{% csrf_token %}
   {{ form.as_p }}
-  <button type="submit" class="btn btn-success">Salvar</button>
-  <a href="{% url 'institution_list' %}" class="btn btn-link">Cancelar</a>
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{% url 'institution_list' %}" class="btn">Cancelar</a>
 </form>
 {% endblock %}

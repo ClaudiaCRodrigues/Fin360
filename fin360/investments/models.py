@@ -80,12 +80,19 @@ class Investment(models.Model):
         InvestmentType, related_name='investments', on_delete=models.SET_NULL,
         null=True, blank=True
     )
+    broker = models.ForeignKey('Broker', on_delete=models.PROTECT, null=True)
     name = models.CharField('Nome do Ativo', max_length=200)
     ticker = models.CharField('Ticker', max_length=20, blank=True)
     initial_value = models.DecimalField('Valor Investido', max_digits=14, decimal_places=2)
     current_value = models.DecimalField('Valor Atual', max_digits=14, decimal_places=2)
+    quantidade = models.DecimalField(max_digits=20, decimal_places=8, null=True)
+    preco_unitario = models.DecimalField(max_digits=20, decimal_places=8, null=True)
+    valor_total = models.DecimalField(max_digits=20, decimal_places=2, null=True)
     acquired_date = models.DateField('Data de Aquisição', null=True, blank=True)
+    data_operacao = models.DateField(null=True)
+    tipo = models.CharField(max_length=50, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Investimento'
@@ -128,3 +135,6 @@ class Index(models.Model):
 
     def get_absolute_url(self):
         return reverse('admin_index_list')
+    
+class Broker(models.Model):
+    nome = models.CharField(max_length=50, unique=True)

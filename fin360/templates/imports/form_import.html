@@ -1,0 +1,26 @@
+{# investments/templates/imports/form_import.html #}
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Importar Investimentos</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      {{ form.arquivos.label_tag }}
+      {{ form.arquivos }}
+      {% if form.arquivos.help_text %}
+        <div class="form-text">{{ form.arquivos.help_text }}</div>
+      {% endif %}
+      {% for error in form.arquivos.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      Selecionar PDFs
+    </button>
+  </form>
+</div>
+{% endblock %}

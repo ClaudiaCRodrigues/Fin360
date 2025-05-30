@@ -8,6 +8,6 @@
 <p><strong>E-mail:</strong> {{ institution.email }}</p>
 <p><strong>Telefone:</strong> {{ institution.phone_number }}</p>
 <p><strong>Endereço:</strong><br>{{ institution.address|linebreaks }}</p>
-<a href="{% url 'institution_update' institution.slug %}" class="btn btn-secondary">Editar</a>
-<a href="{% url 'institution_list' %}" class="btn btn-link">Voltar à lista</a>
+<a href="{% url 'institution_update' institution.slug %}" class="btn btn-primary">Editar</a>
+<a href="{% url 'institution_list' %}" class="btn">Voltar à lista</a>
 {% endblock %}

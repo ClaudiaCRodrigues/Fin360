@@ -1,91 +1,62 @@
+
 {% load static %}
-<nav class="sidebar" data-color="black" data-active-color="danger">
+<nav class="sidebar sidebar-wrapper">
   <div class="logo">
     <a href="{% url 'home' %}" class="simple-text logo-mini">
-      <img src="{% static 'black-dashboard/assets/img/logo-small.png' %}" alt="Logo"/>
+      <img src="{% static 'img/logo-small.png' %}" alt="Logo" />
     </a>
     <a href="{% url 'home' %}" class="simple-text logo-normal">
       Fin360
     </a>
   </div>
-
   <div class="sidebar-wrapper">
     <ul class="nav">
-
-      <!-- Dashboard -->
-      <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
-        <a href="{% url 'home' %}">
+      <li class="nav-item{% if request.resolver_match.url_name == 'home' %} active{% endif %}">
+        <a class="nav-link" href="{% url 'home' %}">
           <i class="tim-icons icon-chart-pie-36"></i>
           <p>Dashboard</p>
         </a>
       </li>
-
-      <!-- Administração -->
-      <li>
-        <a data-toggle="collapse"
-           href="#adminMenu"
-           aria-expanded="{% if request.resolver_match.url_name == 'investment_type_list' or request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'institution_list' or request.resolver_match.url_name == 'index_list' %}true{% else %}false{% endif %}">
+      <li class="nav-item has-submenu{% if request.resolver_match.url_name == 'investment_type_list' or request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'institution_list' or request.resolver_match.url_name == 'index_summary' %} open{% endif %}">
+        <a class="nav-link" href="#">
           <i class="tim-icons icon-settings-gear-63"></i>
           <p>
-            Administração
-            <b class="caret"></b>
+            Administração <b class="caret"></b>
           </p>
         </a>
-        <div id="adminMenu"
-             class="collapse {% if request.resolver_match.url_name == 'investment_type_list' or request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'institution_list' or request.resolver_match.url_name == 'index_list' %}show{% endif %}">
-          <ul class="nav">
-            <li class="{% if request.resolver_match.url_name == 'investment_type_list' %}active{% endif %}">
-              <a href="{% url 'investment_type_list' %}">
-                <i class="tim-icons icon-attach-87"></i>
-                <p>Tipo de investimento</p>
-              </a>
-            </li>
-            <li class="{% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
-              <a href="{% url 'category_list' %}">
-                <i class="tim-icons icon-attach-87"></i>
-                <p>Categorias de investimento</p>
-              </a>
-            </li>
-            <li class="{% if request.resolver_match.url_name == 'institution_list' %}active{% endif %}">
-              <a href="{% url 'institution_list' %}">
-                <i class="tim-icons icon-attach-87"></i>
-                <p>Instituições Financeiras</p>
-              </a>
-            </li>
-            <li class="{% if request.resolver_match.url_name == 'index_summary' %}active{% endif %}">
-              <a href="{% url 'index_summary' %}">
-                <i class="tim-icons icon-chart-bar-32"></i>
-                <p>Índices de investimento</p>
-              </a>
-            </li>
-          </ul>
-        </div>
+        <ul class="submenu">
+          <li class="{% if request.resolver_match.url_name == 'investment_type_list' %}active{% endif %}">
+            <a href="{% url 'investment_type_list' %}">
+              <i class="tim-icons icon-attach-87"></i>
+              <p>Tipo de investimento</p>
+            </a>
+          </li>
+          <li class="{% if request.resolver_match.url_name == 'category_list' %}active{% endif %}">
+            <a href="{% url 'category_list' %}">
+              <i class="tim-icons icon-attach-87"></i>
+              <p>Categorias de investimento</p>
+            </a>
+          </li>
+          <li class="{% if request.resolver_match.url_name == 'institution_list' %}active{% endif %}">
+            <a href="{% url 'institution_list' %}">
+              <i class="tim-icons icon-attach-87"></i>
+              <p>Instituições Financeiras</p>
+            </a>
+          </li>
+          <li class="{% if request.resolver_match.url_name == 'index_summary' %}active{% endif %}">
+            <a href="{% url 'index_summary' %}">
+              <i class="tim-icons icon-chart-bar-32"></i>
+              <p>Índices de investimento</p>
+            </a>
+          </li>
+        </ul>
       </li>
-
-      <!-- Portfólio -->
-      <li class="{% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}">
-        <a href="{% url 'portfolio' %}">
+      <li class="nav-item{% if request.resolver_match.url_name == 'portfolio' %} active{% endif %}">
+        <a class="nav-link" href="{% url 'portfolio' %}">
           <i class="tim-icons icon-wallet-43"></i>
           <p>Portfólio</p>
         </a>
       </li>
-
-      {% comment %} <!-- Relatórios -->
-      <li class="{% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-        <a href="{% url 'reports' %}">
-          <i class="tim-icons icon-paper"></i>
-          <p>Relatórios</p>
-        </a>
-      </li>
-
-      <!-- Configurações -->
-      <li class="{% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
-        <a href="{% url 'settings' %}">
-          <i class="tim-icons icon-ui-settings"></i>
-          <p>Configurações</p>
-        </a>
-      </li> {% endcomment %}
-
     </ul>
   </div>
 </nav>

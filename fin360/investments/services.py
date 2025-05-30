@@ -3,6 +3,12 @@ from decimal import Decimal
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from .models import Index
+from .parsers import BTGParser, XPParser, BaseParser
+
+PARSERS = {
+    'BTG': BTGParser,
+    'XP': XPParser,
+}
 
 # Códigos da API Bacen para cada índice
 SERIES_CODES = {
@@ -11,6 +17,32 @@ SERIES_CODES = {
     'cdi': 12,
     # ... outros índices ...
 }
+
+def detectar_corretora(texto_pagina):
+    if 'Nota de Negociação de Títulos Privados' in texto_pagina:
+        return 'BTG'
+    if 'Confirmação de Aplicação' in texto_pagina:
+        return 'XP'
+    raise ValueError('Corretora não reconhecida')
+
+def processar_importacao(arquivos):
+    resultados = []
+    for f in arquivos:
+        # extrai texto da primeira página
+        import pdfplumber
+        with pdfplumber.open(f) as pdf:
+            primeira_pagina = pdf.pages[0].extract_text()
+        broker = detectar_corretora(primeira_pagina)
+        parser_cls = PARSERS[broker]
+        parser = parser_cls(f)
+        dados = parser.parse()
+        # ex.: salvar no banco:
+        # for d in dados:
+        #     Investment.objects.create(**d)
+        resultados.append({'arquivo': f.name, 'broker': broker, 'linhas': len(dados)})
+    return resultados
+
+
 
 def fetch_all_indices_from_bacen(years=10, timeout_seconds=30, retries=2):
     """

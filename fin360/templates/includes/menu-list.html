@@ -1,9 +1,53 @@
-{% load i18n static %}
+{% load static %}
 <ul class="nav">
-  <li class="{% if 'dashboard' in segment %}active{% endif %}">
+  <li class="nav-item{% if request.resolver_match.url_name == 'home' %} active{% endif %}">
     <a href="{% url 'home' %}">
       <i class="tim-icons icon-chart-pie-36"></i>
       <p>Dashboard</p>
     </a>
   </li>
 </ul>
+
+<!-- navbar.html -->
+{% load static %}
+<nav class="navbar fixed-top navbar-transparent">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <button type="button" class="navbar-toggler js-plugin-toggle">
+        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">Dashboard</a>
+    </div>
+    <ul class="navbar-nav ml-auto">
+      <!-- search -->
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="tim-icons icon-zoom-split"></i>
+        </a>
+      </li>
+      <!-- notifications -->
+      <li class="nav-item">
+        <a class="nav-link" href="#">
+          <i class="tim-icons icon-bell-55"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a class="dropdown-item" href="#">No notifications</a></li>
+        </ul>
+      </li>
+      <!-- profile -->
+      <li class="nav-item">
+        <a class="nav-link js-dropdown-toggle" href="#">
+          <img src="{% static 'img/default-avatar.png' %}" class="avatar" alt="Avatar" />
+        </a>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <div class="dropdown-divider"></div>
+          <li><a class="dropdown-item" href="#">Log out</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
