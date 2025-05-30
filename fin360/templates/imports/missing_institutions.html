@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Corretoras não identificadas</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="step" value="select">
+
+    {# Guardo o nome de cada arquivo para recuperar no POST #}
+    {% for r in faltantes %}
+      <input type="hidden" name="file_names" value="{{ r.arquivo }}">
+    {% endfor %}
+
+    {# Preciso também reenviar os arquivos #}
+    <label>Reenvie os PDFs:</label>
+    <input type="file" name="arquivos" multiple required class="form-control mb-4">
+
+    <table class="table">
+      <thead>
+        <tr><th>Arquivo</th><th>Escolha Corretora</th></tr>
+      </thead>
+      <tbody>
+      {% for r in faltantes %}
+        <tr>
+          <td>{{ r.arquivo }}</td>
+          <td>
+            <select name="broker_for_{{ forloop.counter0 }}" class="form-select">
+              <option value="">— selecione —</option>
+              {% for inst in institutions %}
+                <option value="{{ inst.id }}">{{ inst.name }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Continuar Importação</button>
+  </form>
+{% endblock %}

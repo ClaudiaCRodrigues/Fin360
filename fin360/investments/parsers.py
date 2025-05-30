@@ -1,53 +1,72 @@
+# investments/parsers.py
+
 import pdfplumber
-from abc import ABC, abstractmethod
 import re
+import logging
+from decimal import Decimal
 from datetime import datetime
 
-class BaseParser(ABC):
-    def __init__(self, arquivo):
-        self.arquivo = arquivo
+logger = logging.getLogger(__name__)
 
-    @abstractmethod
-    def parse(self):
-        """Retorna lista de dicts com campos normalizados."""
-        pass
+def generic_parse(file_obj, rules: dict) -> list[dict]:
+    """
+    Lê todo o texto do PDF (todas as páginas), normaliza espaços e quebras,
+    e aplica cada regex em `rules` com re.IGNORECASE | re.DOTALL.
+    Retorna lista com 1 dict: data_operacao, transaction_type, quantidade,
+    preco_unitario, fees, description.
+    """
+    # 1) extrai texto completo
+    pdf = pdfplumber.open(file_obj)
+    raw = " ".join(page.extract_text() or "" for page in pdf.pages)
+    pdf.close()
+    file_obj.seek(0)
 
-class BTGParser(BaseParser):
-    def parse(self):
-        resultados = []
-        with pdfplumber.open(self.arquivo) as pdf:
-            text = pdf.pages[0].extract_text()
-            # Exemplo: extrair Data da Operação (17/05/2025) e títulos
-            match = re.search(r'Data da Operação\s+(\d{2}/\d{2}/\d{4})', text)
-            data_op = datetime.strptime(match.group(1), '%d/%m/%Y').date() if match else None  # :contentReference[oaicite:0]{index=0}
-            # Para tabelas use pdf.pages[i].extract_table()
-            table = pdf.pages[2].extract_table()
-            # Supondo colunas: Tipo, Quantidade, Preço Unitário, Valor Total, …
-            for row in table[1:]:
-                resultados.append({
-                    'broker': 'BTG',
-                    'data_operacao': data_op,
-                    'tipo': row[0],
-                    'quantidade': float(row[1].replace(',', '.')),
-                    'preco_unitario': float(row[2].replace(',', '.')),
-                    'valor_total': float(row[3].replace(',', '.')),
-                })
-        return resultados
+    # 2) normaliza NBSP e whitespace
+    raw = raw.replace("\xa0", " ")
+    text = re.sub(r"\s+", " ", raw).strip()
 
-class XPParser(BaseParser):
-    def parse(self):
-        resultados = []
-        with pdfplumber.open(self.arquivo) as pdf:
-            text = pdf.pages[0].extract_text()
-            # Exemplo: Data Solicitação (22/05/2025) e Valor Solicitado (R$ 63,75)
-            match_data = re.search(r'Data Solicitação\s+(\d{2}/\d{2}/\d{4})', text)
-            match_val = re.search(r'Valor Solicitado\s+R\$ ([\d\.,]+)', text)
-            data_req = datetime.strptime(match_data.group(1), '%d/%m/%Y').date() if match_data else None  # :contentReference[oaicite:1]{index=1}
-            valor = float(match_val.group(1).replace('.', '').replace(',', '.')) if match_val else None
-            resultados.append({
-                'broker': 'XP',
-                'data_solicitacao': data_req,
-                'valor_solicitado': valor,
-                # fund, status, etc. também podem ser extraídos
-            })
-        return resultados
+    logger.debug("generic_parse: texto normalizado (primeiros 200 chars): %r", text[:200])
+
+    # 3) aplica cada regex definida em rules
+    extracted = {}
+    for field, pattern in rules.items():
+        logger.debug("generic_parse: aplicando regex para '%s': /%s/", field, pattern)
+        m = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+        if not m:
+            raise ValueError(f"Campo '{field}' não encontrado com /{pattern}/ em:\n…{text[:200]}…")
+        extracted[field] = m.group(1).strip()
+        logger.debug("generic_parse: extraído %s = %r", field, extracted[field])
+
+    # 4) monta a transação
+    row = {}
+
+    # data_operacao
+    if "data_operacao" in extracted:
+        row["data_operacao"] = datetime.strptime(
+            extracted["data_operacao"], "%d/%m/%Y"
+        ).date()
+
+    # valor → quantidade + preco_unitario=1
+    if "valor" in extracted:
+        v = extracted["valor"].replace(".", "").replace(",", ".")
+        row["quantidade"] = Decimal(v)
+        row["preco_unitario"] = Decimal("1")
+
+    # tipo → transaction_type
+    if "tipo" in extracted:
+        row["transaction_type"] = extracted["tipo"].lower()
+    else:
+        row["transaction_type"] = "buy"
+
+    # fees (opcional)
+    if "fees" in extracted:
+        f = extracted["fees"].replace(".", "").replace(",", ".")
+        row["fees"] = Decimal(f)
+    else:
+        row["fees"] = Decimal("0")
+
+    # description (opcional)
+    row["description"] = extracted.get("description", "")
+
+    logger.debug("generic_parse: linha final montada: %r", row)
+    return [row]

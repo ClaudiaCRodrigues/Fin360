@@ -1,0 +1,40 @@
+{# investments/templates/imports/resultado.html #}
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h1>Resultados da Importação</h1>
+
+  {% if resultados %}
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th>Arquivo</th>
+          <th>Corretora</th>
+          <th>Linhas processadas</th>
+          <th>Erro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in resultados %}
+          <tr>
+            <td>{{ item.arquivo }}</td>
+            <td>{{ item.broker }}</td>
+            <td>{{ item.linhas }}</td>
+            <td class="text-red-500">{{ r.erro }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'investment_import' %}" class="btn btn-primary mt-3">
+      Importar outros PDFs
+    </a>
+  {% else %}
+    <div class="alert alert-warning mt-4">
+      Nenhum arquivo foi processado.
+    </div>
+    <a href="{% url 'investment_import' %}" class="btn btn-primary mt-3">
+      Voltar para importar
+    </a>
+  {% endif %}
+</div>
+{% endblock %}
